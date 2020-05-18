@@ -1,38 +1,33 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as TodoActions from '../../store/reducers/Todo/actions';
 
-function Todo({ todos, addTodoAct }) {
+export default function Todo() {
   const [todo, setTodo] = useState(null);
-  console.log(todos);
+  const todos = useSelector((state) => state.todo.todo);
+  const dispatch = useDispatch();
+
   function handleInputTodo(e) {
     setTodo(e.target.value);
   }
   function addTodo() {
-    addTodoAct(todo);
+    dispatch(TodoActions.addTodoAct(todo));
   }
   return (
     <>
       <h2>Add Todos</h2>
       <input onChange={handleInputTodo} />
-      <button onClick={() => addTodo()}>Add Todo</button>
+      <button type="button" onClick={() => addTodo()}>
+        Add Todo
+      </button>
 
       <hr />
       <h2>Lista de Todos</h2>
       <ul>
-        {todos.map((todo) => {
-          console.log(todo);
-          return <li key={todo}>{todo}</li>;
+        {todos.map((todoItem) => {
+          return <li key={todoItem}>{todoItem}</li>;
         })}
       </ul>
     </>
   );
 }
-const mapStateToPros = (state) => ({
-  todos: state.todo.todo,
-});
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(TodoActions, dispatch);
-
-export default connect(mapStateToPros, mapDispatchToProps)(Todo);
